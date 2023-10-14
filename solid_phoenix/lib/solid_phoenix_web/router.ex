@@ -4,23 +4,19 @@ defmodule SolidPhoenixWeb.Router do
   import SolidPhoenixWeb.UserAuth
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, html: {SolidPhoenixWeb.Layouts, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-    plug :fetch_current_user
+    plug :accepts, ["json"]
   end
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_current_user
   end
 
   scope "/", SolidPhoenixWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    post "/user/register", UserAuthController, :register
+    post "/user/log_in", UserAuthController, :login
   end
 
   # Other scopes may use custom stacks.
@@ -30,7 +26,6 @@ defmodule SolidPhoenixWeb.Router do
 
   # Enable Swoosh mailbox preview in development
   if Application.compile_env(:solid_phoenix, :dev_routes) do
-
     scope "/dev" do
       pipe_through :browser
 
@@ -40,34 +35,17 @@ defmodule SolidPhoenixWeb.Router do
 
   ## Authentication routes
 
-  scope "/", SolidPhoenixWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
+  scope "/api", SolidPhoenixWeb do
+    pipe_through [:api]
 
-    get "/users/register", UserRegistrationController, :new
-    post "/users/register", UserRegistrationController, :create
-    get "/users/log_in", UserSessionController, :new
-    post "/users/log_in", UserSessionController, :create
-    get "/users/reset_password", UserResetPasswordController, :new
-    post "/users/reset_password", UserResetPasswordController, :create
-    get "/users/reset_password/:token", UserResetPasswordController, :edit
-    put "/users/reset_password/:token", UserResetPasswordController, :update
-  end
-
-  scope "/", SolidPhoenixWeb do
-    pipe_through [:browser, :require_authenticated_user]
-
-    get "/users/settings", UserSettingsController, :edit
-    put "/users/settings", UserSettingsController, :update
-    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
-  end
-
-  scope "/", SolidPhoenixWeb do
-    pipe_through [:browser]
-
-    delete "/users/log_out", UserSessionController, :delete
-    get "/users/confirm", UserConfirmationController, :new
-    post "/users/confirm", UserConfirmationController, :create
-    get "/users/confirm/:token", UserConfirmationController, :edit
-    post "/users/confirm/:token", UserConfirmationController, :update
+    get "/user", UserAuthController, :index
+    patch "/user", UserAuthController, :update
+    post "/user/log_out", UserAuthController, :logout
+    post "/user/confirm_email", UserAuthController, :confirm_email
+    post "/user/reset_password", UserAuthController, :reset_password
+    resources "/dreams", DreamController, except: [:new, :edit, :index]
+    resources "/comments", CommentController, except: [:new, :edit]
+    # TODO: implement forgot_password functionality
+    # post "/user/forgot_password", UserAuthController, :forgot_password
   end
 end

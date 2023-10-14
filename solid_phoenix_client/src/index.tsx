@@ -1,6 +1,5 @@
 import { render } from 'solid-js/web';
 
-import { Login } from './login';
 import { Provider } from './contexts/auth-context-provider';
 import { Route, Router, Routes } from '@solidjs/router';
 import { Home } from './pages/home';
