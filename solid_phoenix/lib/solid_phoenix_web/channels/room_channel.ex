@@ -2,12 +2,8 @@ defmodule SolidPhoenixWeb.RoomChannel do
   use SolidPhoenixWeb, :channel
 
   @impl true
-  def join("room:lobby", payload, socket) do
-    if authorized?(payload) do
-      {:ok, socket}
-    else
-      {:error, %{reason: "unauthorized"}}
-    end
+  def join("room:lobby", _payload, socket) do
+    {:ok, socket}
   end
 
   # Channels can be used in a request/response fashion

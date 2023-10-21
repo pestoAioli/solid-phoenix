@@ -8,6 +8,7 @@ a template of sorts so I don't have to rewrite the basic auth and reconfigure th
 1. make sure you have elixir, phoenix, and postgres installed in your machine(if you're unsure about this please check out phoenix installation guide.)
 2. cd into solid_phoenix folder
 3. run `mix deps.get` to install dependencies
+4. run mix ecto.create to create the tables in your postgres db
 4. this template has very basic auth included, just run `mix ecto.migrate` to run the migration file and create the user and user token tables in postgres.
 5. run mix phx.server to start up your phoenix server on localhost: 4000
 

@@ -220,8 +220,8 @@ defmodule SolidPhoenix.Accounts do
   @doc """
   Generates a session token.
   """
-  def generate_user_session_token(user) do
-    {token, user_token} = UserToken.build_session_token(user)
+  def generate_user_session_token(user, conn) do
+    {token, user_token} = UserToken.build_session_token(user, conn)
     Repo.insert!(user_token)
     token
   end

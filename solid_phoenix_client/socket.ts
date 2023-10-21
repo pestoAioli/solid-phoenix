@@ -7,10 +7,10 @@ export default function socket(topic: string): Channel {
   channel
     .join()
     .receive('ok', (_response) => {
-
+      console.log("joined")
     })
     .receive('error', (_response) => {
-
+      console.log("errorrr", _response)
     })
   return channel;
 }
