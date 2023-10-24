@@ -3,7 +3,8 @@ import { Login } from '../components/login';
 import '../styles/home.css';
 import SignUp from '../components/sign-up';
 import { SocketContextProvider } from '../contexts/socket-context-provider';
-import { useStore } from '../contexts/auth-context-provider';
+import { useAuth, useStore } from '../contexts/auth-context-provider';
+import { SignOut } from '../components/sign-out';
 
 export const Home = () => {
   const [loginOrRegister, setLoginOrRegister] = createSignal(true);
@@ -12,6 +13,8 @@ export const Home = () => {
   const [error, setError] = createSignal(false);
 
   const [currentUserInfo, _setCurrUserInfo] = useStore();
+  const [token, _setToken] = useAuth();
+  console.log(token(), "token")
 
   return (
     //example of how you can connect to a channel in a page
@@ -35,8 +38,9 @@ export const Home = () => {
             }}><b>refresh</b></button> and try again, and make sure you're logged in</p>
           </Show>
         </Show>
-        <Show when={loggedIn() && !error()}>
+        <Show when={(loggedIn() || token()) && !error()}>
           {currentUserInfo.username} is logged in
+          <SignOut setLoggedIn={setLoggedIn} />
         </Show>
       </div >
     </SocketContextProvider>
